@@ -1,0 +1,16 @@
+You may use the code of this project under any of the following OSI approved license(s):
+
+- Apache License 2.0
+- BSD 3-Clause "New" or "Revised" license
+- BSD 2-Clause "Simplified" or "FreeBSD" license
+- GNU General Public License (GPL)
+- GNU Library or "Lesser" General Public License (LGPL)
+- MIT license
+- Mozilla Public License 2.0
+- Common Development and Distribution License
+- Eclipse Public License
+
+Please see http://opensource.org/licenses for the relevant terms and conditions.
+
+Where 3rd party components have been included, the copyright remains that of those respective owners
+and is indicated in the relevant files.

@@ -1,0 +1,147 @@
+Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> [ TYPE ( property_list ) expression ] expression
+Rule 2     expression -> empty
+Rule 3     property_list -> PROPERTY property_list
+Rule 4     property_list -> PROPERTY
+Rule 5     empty -> <empty>
+
+Terminals, with rules where they appear
+
+(                    : 1
+)                    : 1
+PROPERTY             : 3 4
+TYPE                 : 1
+[                    : 1
+]                    : 1
+error                : 
+
+Nonterminals, with rules where they appear
+
+empty                : 2
+expression           : 1 1 0
+property_list        : 1 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . [ TYPE ( property_list ) expression ] expression
+    (2) expression -> . empty
+    (5) empty -> .
+
+    [               shift and go to state 2
+    $end            reduce using rule 5 (empty -> .)
+
+    expression                     shift and go to state 1
+    empty                          shift and go to state 3
+
+state 1
+
+    (0) S' -> expression .
+
+
+
+state 2
+
+    (1) expression -> [ . TYPE ( property_list ) expression ] expression
+
+    TYPE            shift and go to state 4
+
+
+state 3
+
+    (2) expression -> empty .
+
+    $end            reduce using rule 2 (expression -> empty .)
+    ]               reduce using rule 2 (expression -> empty .)
+
+
+state 4
+
+    (1) expression -> [ TYPE . ( property_list ) expression ] expression
+
+    (               shift and go to state 5
+
+
+state 5
+
+    (1) expression -> [ TYPE ( . property_list ) expression ] expression
+    (3) property_list -> . PROPERTY property_list
+    (4) property_list -> . PROPERTY
+
+    PROPERTY        shift and go to state 7
+
+    property_list                  shift and go to state 6
+
+state 6
+
+    (1) expression -> [ TYPE ( property_list . ) expression ] expression
+
+    )               shift and go to state 8
+
+
+state 7
+
+    (3) property_list -> PROPERTY . property_list
+    (4) property_list -> PROPERTY .
+    (3) property_list -> . PROPERTY property_list
+    (4) property_list -> . PROPERTY
+
+    )               reduce using rule 4 (property_list -> PROPERTY .)
+    PROPERTY        shift and go to state 7
+
+    property_list                  shift and go to state 9
+
+state 8
+
+    (1) expression -> [ TYPE ( property_list ) . expression ] expression
+    (1) expression -> . [ TYPE ( property_list ) expression ] expression
+    (2) expression -> . empty
+    (5) empty -> .
+
+    [               shift and go to state 2
+    ]               reduce using rule 5 (empty -> .)
+
+    expression                     shift and go to state 10
+    empty                          shift and go to state 3
+
+state 9
+
+    (3) property_list -> PROPERTY property_list .
+
+    )               reduce using rule 3 (property_list -> PROPERTY property_list .)
+
+
+state 10
+
+    (1) expression -> [ TYPE ( property_list ) expression . ] expression
+
+    ]               shift and go to state 11
+
+
+state 11
+
+    (1) expression -> [ TYPE ( property_list ) expression ] . expression
+    (1) expression -> . [ TYPE ( property_list ) expression ] expression
+    (2) expression -> . empty
+    (5) empty -> .
+
+    [               shift and go to state 2
+    $end            reduce using rule 5 (empty -> .)
+    ]               reduce using rule 5 (empty -> .)
+
+    expression                     shift and go to state 12
+    empty                          shift and go to state 3
+
+state 12
+
+    (1) expression -> [ TYPE ( property_list ) expression ] expression .
+
+    $end            reduce using rule 1 (expression -> [ TYPE ( property_list ) expression ] expression .)
+    ]               reduce using rule 1 (expression -> [ TYPE ( property_list ) expression ] expression .)
+

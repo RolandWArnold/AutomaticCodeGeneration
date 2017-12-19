@@ -1,0 +1,157 @@
+### BaseDialog ###
+
+[BaseDialog(name="CheckInfo" title="Check Information")
+    [Label(name="Is this image correct?")]
+    [Picture(name="" read="photo")]
+]
+
+[BaseDialog(name="MuchAppreciated" title="Much Appreciated")
+    [Label(name="Much Appreciated!")]
+]
+
+### Wizard ###
+
+[Wizard(name="EnterGenericBiz")
+    [Dialog(name="EnterGenericBiz" title="Enter Generic Application" movement="noback")
+        [Textbox(name="Enter Credentials" fieldtype="numeric" maxsize="12" write="userNumber")]
+        [Whitespace(name="50")]
+        [Picture(name="" filename="/biz_log.gif")]
+        [Label(name="")]
+    ]
+    [Dialog(name="BaseMenu" title="Home" movement="noback")
+        [MenuItem(name="Capture Details" targetwizard="CaptureDetails")]
+        [MenuItem(name="View Items" targetwizard="ViewItems")]
+        [MenuItem(name="Write Notes" targetwizard="Notes")]
+    ]
+]
+
+[Wizard(name="ViewItems" title="View Items")
+    [Dialog(name="CaptureDetails")
+        [Textbox(name="Enter Details:" fieldtype="numeric" maxsize="8" write="someDetails")]
+        [Label(name="")]
+        [HorizontalRule(name="")]
+    ]
+    [BaseDialogInstance(name="ConfirmImage")]
+    [Dialog(name="Option3Data" movement="noback" title="View Items")
+        [Label(name="Detail 1:")]
+        [Label(name="" read="some_stored_value")]
+        [Label(name="Detail 2:")] 
+        [Label(name="" read="some_stored_value2")]
+        [Label(name="Detail 3:")]  
+        [Label(name="" read="some_stored_value3")]  
+    ]
+]
+
+[Wizard(name="CaptureDetails" title="Capture Details")
+    [Dialog(name="CaptureDetails")
+        [Textbox(name="First Name:" fieldtype="initial_caps_word" maxsize="20" write="firstname")]
+        [Textbox(name="Last Name:" fieldtype="initial_caps_word" maxsize="20" write="lastname")]
+    ]
+    [Dialog(name="CaptureGenderPhone")
+        [Textbox(name="Date of birth (YYYYMMDD):" fieldtype="numeric" maxsize="8" write="born" validation="yyyymmdd")]
+        [Combobox(name="Gender:" write="gender")
+            [ComboOption(name="Female")]
+            [ComboOption(name="Male")]
+        ]
+        [Textbox(name="Mobile-phone number:" fieldtype="phonenumber" maxsize="14" write="mobilenumber")]
+    ]
+    [Dialog(name="CaptureUserPicture" title="Take Photo")
+        [Label(name="This page used to take a photo of the person - removed for copyright issues")]
+    ]
+    [Dialog(name="ConfirmPatientDetails" title="Confirm Details")
+        [Label(name="Confirm Photo")]
+        [Picture(name="" read="image")]
+        [Label(name="First Name:")]
+        [Label(name="" read="firstname")]
+        [Label(name="Last Name:")]
+        [Label(name="" read="lastname")]
+        [Label(name="Gender:")]
+        [Label(name="" read="gender")]
+        [Label(name="Date of birth:")]
+        [Label(name="" read="born")]
+        [Label(name="Mobile-phone number:")]
+        [Label(name="" read="mobilenumber")]
+    ]
+    [Dialog(name="ConsultOrQuit" title="Continue?")
+        [MenuItem(name="Do More" targetwizard="DoMore")]
+        [MenuItem(name="Back to Main Menu" targetwizard="EnterGenericBiz")]
+    ]
+]
+
+[Wizard(name="Notes" title="Write Notes")
+    [Dialog(name="SomeNote" title="Some random question?")
+        [Label(name="Question?")]
+        [MenuItem(name="Yes" targetdialog="FilteredList:YesOption" write="is_yes:no")]
+        [MenuItem(name="No" targetdialog="FilteredList:YesOption" write="is_yes:yes")]
+    ]
+    [FilteredList(name="YesOption" write="noteitem" title="Items" back_if_value="{Notes notesList} Dialog:NoteOptions")]
+    [Dialog(name="CaptureDetail" title="Pricing")
+        [Label(name="Selected Item:")]
+        [Label(name="" read="noteitem")]
+        [HorizontalRule(name="")]
+        [Textbox(name="Amount (USD)" fieldtype="decimal" maxsize="8" write="price_of")]
+    ]
+    [Dialog(name="SummaryPage" movement="noback" title="More Items?" stackvalues="{Notes notesList} noteitem noteitem_code on_promotion price_of")
+        [Label(name="Would you like to choose another item?")]
+        [MenuItem(name="Yes" targetdialog="FilteredList:YesOption")]
+        [MenuItem(name="No" targetdialog="Dialog:NoteTotals")]
+        [ItemList(name="notesList" test="{Notes notesList}" title="Items:" pattern="{Notes notesList.noteitem} - USD {Notes notesList.price_of}")]
+    ]
+    [Dialog(name="NotesTotals" title="Note Total")
+        [Label(name="Some Items here....")]
+        [Totals(name="notesTotals" sum="{Notes:notesList amount}" text="\n\nUSD {sum}")]
+    ]
+]
+
+[Wizard(name="DoMore" title="Do More")
+    [Dialog(name="DoingMore" title="Doing More")
+        [Label(name="Information")]
+        [Checkbox(name="Option 1" write="option1")]
+        [Checkbox(name="Option 2" write="option2")]
+    ]
+    [Dialog(name="QuickMenu" title="Quick Menu")
+        [MenuItem(name="Option A" targetwizard="OptionA")]
+        [MenuItem(name="Option B" targetwizard="OptionB")]
+        [ItemList(name="optiona_details" test="{DoMore optiona_details}" title="Option A:" pattern="{DoMore optiona_details.optiona_type} - {DoMore optiona_details.optiona_result} - USD {DoMore optiona_details.optiona_amount}")]
+        [ItemList(name="optionb_details" test="{DoMore optionb_details}" title="Option B:" pattern="{DoMore optionb_details.optionb_type} - USD {DoMore optionb_details.optionb_amount}")]
+    ]
+    [Dialog(name="Price" title="Price")
+        [Textbox(name="Fee (USD)" fieldtype="decimal" maxsize="8" write="fee")]
+    ]
+    [WizardPointer(name="EnterGenericBiz")]
+]
+
+[Wizard(name="OptionA")
+    [FilteredList(name="SomeOption" title="Option A" write="optiona_type" back_if_value="{DoMore optiona_details} Dialog:Completed")]
+    [Dialog(name="Result" title="Results")
+        [Textbox(name="Rapid Test Result" write="optiona_result" maxsize="25")]
+    ]
+    [Dialog(name="EnterCost" title="Pricing")
+        [Label(name="Selected Rapid Test:")]
+        [Label(name="" read="optiona_type")]
+        [HorizontalRule(name="")]
+        [Textbox(name="Amount (USD)" fieldtype="decimal" maxsize="8" write="optiona_amount")]
+    ]
+    [Dialog(name="Completed" title="More Tests?" movement="noback" stackvalues="{DoMore optiona_details} optiona_type optiona_type_code optiona_result optiona_amount")
+        [Label(name="Are there more questions?")]
+        [MenuItem(name="Yes" targetdialog="FilteredList:SomeOption")]
+        [MenuItem(name="No" targetwizard="DoMore")]
+        [ItemList(name="optiona_details" test="{DoMore optiona_details}" title="Items:" pattern="{DoMore optiona_details.optiona_type} - {DoMore optiona_details.optiona_result} - USD {DoMore optiona_details.optiona_amount}")]
+    ]
+]
+
+[Wizard(name="OptionB")
+    [FilteredList(name="OtherOption" write="optionb_type" title="Option B" back_if_value="{DoMore optionb_details} Dialog:Completed")]
+    [Dialog(name="EnterCost" title="Pricing")
+        [Label(name="Selected Request:")]
+        [Label(name="" read="optionb_type")]
+        [HorizontalRule(name="")]
+        [Textbox(name="Amount (USD)" fieldtype="decimal" maxsize="8" write="optionb_amount")]
+    ]
+    [Dialog(name="Completed" title="More Requests?" movement="noback" stackvalues="{DoMore optionb_details} optionb_type optionb_type_code optionb_amount")
+        [Label(name="Any further requests?")]
+        [MenuItem(name="Yes" targetdialog="FilteredList:OtherOption")]
+        [MenuItem(name="No" targetwizard="DoMore")]
+        [ItemList(name="optionb_details" test="{DoMore optionb_details}" title="Items:" pattern="{DoMore optionb_details.optionb_type} - USD {DoMore optionb_details.optionb_amount}")]
+    ]
+]
